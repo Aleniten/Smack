@@ -1,5 +1,6 @@
 package com.aleapp.smack
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginBtnNavClicked(view: View) {
-
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 
     fun addCannelClicked(view: View) {
