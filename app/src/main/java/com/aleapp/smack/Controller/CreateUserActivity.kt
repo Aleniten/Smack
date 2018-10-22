@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.aleapp.smack.R
+import com.aleapp.smack.Services.AuthService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -50,6 +51,18 @@ class CreateUserActivity : AppCompatActivity() {
     }
 
     fun createUserBtnClicked(view: View){
+        val email = createEmailTxt.text.toString()
+        val password = createPasswordTxt.text.toString()
 
+        AuthService.registerUser(this,email,password){registerSuccess ->
+                if (registerSuccess){
+                    AuthService.loginUser(this, email,password){loginSuccess ->
+                        if(loginSuccess){
+                            println(AuthService.authToken)
+                            println(AuthService.userEmail)
+                        }
+                    }
+            }
+        }
     }
 }
