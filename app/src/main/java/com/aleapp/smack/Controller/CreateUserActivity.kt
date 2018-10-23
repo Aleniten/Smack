@@ -3,6 +3,7 @@ package com.aleapp.smack.Controller
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.aleapp.smack.R
 import com.aleapp.smack.Services.AuthService
@@ -51,15 +52,23 @@ class CreateUserActivity : AppCompatActivity() {
     }
 
     fun createUserBtnClicked(view: View){
+        Log.d("CreateUserActivity", "------> createUserBtnClicked()")
+        val userName = createUserNameTxt.text.toString()
         val email = createEmailTxt.text.toString()
         val password = createPasswordTxt.text.toString()
 
         AuthService.registerUser(this,email,password){registerSuccess ->
                 if (registerSuccess){
+                    Log.d("CreateUserActivity", "registerSuccess")
                     AuthService.loginUser(this, email,password){loginSuccess ->
+                        Log.d("CreateUserActivity", "loginUser")
                         if(loginSuccess){
-                            println(AuthService.authToken)
-                            println(AuthService.userEmail)
+                            AuthService.createUser(this, userName, email, userAvatar, avatarColor){createSuccess ->
+                                Log.d("CreateUserActivity", "createUser")
+                                if(createSuccess){
+                                    finish()
+                                }
+                            }
                         }
                     }
             }
