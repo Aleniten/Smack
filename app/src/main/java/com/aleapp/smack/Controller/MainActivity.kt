@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.aleapp.smack.Model.Channel
+import com.aleapp.smack.Model.Message
 import com.aleapp.smack.R
 import com.aleapp.smack.Services.AuthService
 import com.aleapp.smack.Services.MessageService
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         socket.connect()
         socket.on("channelCreated", onNewChannel)
+        socket.on("messageCreated", onNewMessage)
 
 
         val toggle = ActionBarDrawerToggle(
@@ -162,8 +164,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val onNewMessage = Emitter.Listener { args ->
+        runOnUiThread{
+            val msgBody = args[0] as String
+            val channelId = args[2] as String
+            val userName = args[3] as String
+            val userAvatar = args[4] as String
+            val userAvatarColor = args[5] as String
+            val id = args[6] as String
+            val timeStamp = args[7] as String
+
+            val newMessage = Message(msgBody, userName, channelId, userAvatar, userAvatarColor, timeStamp)
+            MessageService.messages.add(newMessage)
+
+        }
+    }
+
     fun sendMsgBtnClicked(view: View){
-        hideKeyboard()
+        if(App.prefs.isLoogedIn && messageTextField.text.isNotEmpty() && selectedChannel != null){
+
+            val userId = UserDataService.id
+            val channelId = selectedChannel!!.id
+            socket.emit("newMessage", messageTextField.text.toString(), userId, channelId,
+                UserDataService.name, UserDataService.avatarName, UserDataService.avatarColor)
+            messageTextField.text.clear()
+            hideKeyboard()
+        }
     }
 
     fun hideKeyboard(){
