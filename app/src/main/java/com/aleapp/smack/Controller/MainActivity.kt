@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         setupAdapters()
+
+        if(App.prefs.isLoogedIn){
+            AuthService.finUserByEmail(this){
+
+            }
+        }
     }
 
     override fun onResume() {
@@ -68,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userDataChangeReceiver = object : BroadcastReceiver(){
         override fun onReceive(context: Context, intent: Intent?) {
-            if(AuthService.isLoggedIn){
+            if(App.prefs.isLoogedIn){
                 userNameNavHeader.text = UserDataService.name
                 userMailNavHeader.text = UserDataService.email
                 val resourceId = resources.getIdentifier(UserDataService.avatarName, "drawable", packageName)
@@ -94,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginBtnNavClicked(view: View) {
-        if (AuthService.isLoggedIn){
+        if (App.prefs.isLoogedIn){
             UserDataService.logout()
             userNameNavHeader.text = ""
             userMailNavHeader.text = ""
@@ -108,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addCannelClicked(view: View) {
-        if (AuthService.isLoggedIn){
+        if (App.prefs.isLoogedIn){
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog, null)
 

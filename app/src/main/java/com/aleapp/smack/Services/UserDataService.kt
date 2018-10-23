@@ -1,6 +1,7 @@
 package com.aleapp.smack.Services
 
 import android.graphics.Color
+import com.aleapp.smack.Controller.App
 import java.util.*
 
 object UserDataService {
@@ -18,9 +19,9 @@ object UserDataService {
         var avatarName = ""
         var email = ""
         var name = ""
-        AuthService.authToken = ""
-        AuthService.userEmail = ""
-        AuthService.isLoggedIn = false
+        App.prefs.authToken = ""
+        App.prefs.userEmail = ""
+        App.prefs.isLoogedIn = false
 
     }
 
